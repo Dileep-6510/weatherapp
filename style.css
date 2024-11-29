@@ -93,7 +93,7 @@ body{
     color: rgb(228, 226, 226)
 }
 .weather{
-    display: none;
+    /*display: none;*/
 }
 .error{
     text-align: center;
@@ -101,4 +101,6 @@ body{
     font-size: 14px;
     margin-top: 10px;
     display: none;
+    color:rgb(251, 8, 8);
+    font-weight: bold;
 }

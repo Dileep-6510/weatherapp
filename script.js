@@ -1,44 +1,75 @@
-const apiKey = 'bee0451eba80bc84bcb42941589fb7ad'
-        const apiUrl = "https://api.openweathermap.org/data/2.5/weather?&units=metric&q=";
+//access the api with key and url
+let apiKey = "bee0451eba80bc84bcb42941589fb7ad";
+let apiUrl = "https://api.openweathermap.org/data/2.5/weather?&units=metric&q=";
 
-        const searchBox = document.querySelector(".search input")
-        const searchBtn = document.querySelector(".search button")
-        const weatherIcon = document.querySelector(".weather-icon")
+//accessing the input and button for city name and search
+let inputCity = document.querySelector('.search input')
+let searchButton = document.querySelector('.search button')
 
-        async function checkweather(city) {
-            const responce = await fetch(apiUrl + city + `&appid=${apiKey}`);
-            if (responce.status == 404){
-                document.querySelector(".error").style.display='block'
-                document.querySelector(".weather").style.display='none'
-            }else{
-                var data = await responce.json();
-                document.querySelector(".city").innerHTML= data.name
-                document.querySelector(".temp").innerHTML= Math.round(data.main.temp) + "°C"
-                document.querySelector(".humidity").innerHTML= data.main.humidity+ "%"
-                document.querySelector(".windspeed").innerHTML= data.wind.speed + " Km/H"
-                
+//accessing all the elements for information to our weather app
+let climateImages = document.querySelector(".weather-icon")
+let cityname = document.querySelector('.weather h2')
+let citytemp = document.querySelector('.weather h1')
+let humidity = document.querySelector('.humidity')
+let windspeed = document.querySelector('.windspeed')
+
+
+document.querySelector('.error').style.display = "none"
+document.querySelector('.weather').style.display = "none"
+
+async function watherdata(city){
+    //calling wather api
+    const responce = await fetch(apiUrl + city+ `&appid=${apiKey}`)
+    //accessed api data into json format
+    let data = await responce.json()
+
     
-                if(data.weather[0].main=="Clouds"){
-                    weatherIcon.src = "images/clouds.png"
-                }
-                else if(data.weather[0].main=="Clear"){
-                    weatherIcon.src = "images/clear.png"
-                }
-                else if(data.weather[0].main=="Rain"){
-                    weatherIcon.src = "images/rain.png"
-                }
-                else if(data.weather[0].main=="Drizzle"){
-                    weatherIcon.src = "images/drizzle.png"
-                }
-                else if(data.weather[0].main=="Mist"){
-                    weatherIcon.src = "images/mist.png"
-                }
-                document.querySelector(".weather").style.display= 'block'
-                document.querySelector(".error").style.display='none'
-            }
-        }
+    
+    // if input box is empty and search option is performed 
+    if(responce.status == 400){
+        document.querySelector('.error p').textContent = "Please Enter for a City"
+        document.querySelector('.error').style.display = "block" 
+    }
+    else if(responce.status == 404){
+        document.querySelector('.error p').textContent = "Enter Correct City"
+        document.querySelector('.error').style.display = "block"
+    } 
+    else{
 
-        searchBtn.addEventListener('click',()=>{
-            checkweather(searchBox.value);
-            searchBox.value = ""
-        })
+        //modifying data according to city using api fecth data
+        cityname.textContent = data.name;
+        citytemp.textContent = Math.round(data.main.temp)+ "°C";
+        humidity.textContent = data.main.humidity + "%"
+        windspeed.textContent = data.wind.speed + "KMPH"
+
+        //changes images according to climate
+        if(data.weather[0].main == "Clouds"){
+            climateImages.src = "images/clouds.png"
+        }
+        else if(data.weather[0].main=="Clear"){
+            climateImages.src = "images/clear.png"
+        }
+        else if(data.weather[0].main=="Rain"){
+            climateImages.src = "images/rain.png"
+        }
+        else if(data.weather[0].main=="Drizzle"){
+            climateImages.src = "images/drizzle.png"
+        }
+        else if(data.weather[0].main=="Mist"){
+            climateImages.src = "images/mist.png"
+        }
+        document.querySelector('.error').style.display = "none"
+        document.querySelector('.weather').style.display = "block"
+
+}
+
+}
+
+searchButton.addEventListener('click',()=>{
+    watherdata(inputCity.value);
+    inputCity.value =""
+})
+
+
+
+
